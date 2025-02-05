@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: janus-prd
+  name: janus-prd
+spec:
+  ports:
+  - name: 9860-tcp
+    port: 9860
+    protocol: TCP
+    targetPort: 9860
+  selector:
+    app: janus-prd
+    deploymentconfig: janus-prd
+  sessionAffinity: None
+  type: ClusterIP

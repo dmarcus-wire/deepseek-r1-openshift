@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    application: janus-prd
+  name: janus-prd
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      deploymentconfig: janus-prd
+  template:
+    metadata:
+      labels:
+        app: janus-prd
+        deploymentconfig: janus-prd
+      name: janus-prd
+    spec:
+      containers:
+      - name: janus-prd
+        image: image-registry.openshift-image-registry.svc:5000/prd/janus-prd-stream:latest
+        # quay?
+        ports:
+        - containerPort: 9860
+          name: http
+          protocol: TCP
+        resources: {}
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 9860
+            scheme: HTTP
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 9860
+            scheme: HTTP
+          initialDelaySeconds: 5
+          timeoutSeconds: 1
+          periodSeconds: 10
+          successThreshold: 1
+          failureThreshold: 3

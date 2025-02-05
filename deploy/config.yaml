@@ -1,0 +1,23 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: custom-image-build-janus-prd
+
+spec:
+  source:
+    type: Git
+    git:
+      uri: https://github.xxxxxx/Janus.git
+    sourceSecret: 
+      name: git-secret 
+  strategy:
+    type: Docker                      
+    dockerStrategy:
+      dockerfilePath: Dockerfile
+  output:
+    to:
+      kind: ImageStreamTag
+      name: janus-prd-stream:latest
+  triggers:
+  - type: ImageChange
+  - type: ConfigChange
